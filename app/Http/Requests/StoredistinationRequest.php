@@ -6,23 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoredistinationRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'accommodation' => ['required', 'string', 'max:255'],
+
+            'dishes' => ['required', 'array'],
+            'dishes.*' => ['integer', 'exists:dishes,id'],
+
+            'places' => ['required', 'array'],
+            'places.*' => ['integer', 'exists:places,id'],
+
+            'activities' => ['required', 'array'],
+            'activities.*' => ['integer', 'exists:activities,id'],
+
         ];
     }
 }

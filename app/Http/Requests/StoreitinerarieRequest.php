@@ -6,23 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreitinerarieRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'duration_from' => ['required', 'date'], 
+            
+            'duration_to' => ['required', 'date', 'after_or_equal:duration_from'],
+            'image' => ['nullable', 'string', 'max:255'],
+            'category_id' => ['nullable', 'exists:categories,id'],    
+
+            'destinations' => ['required' , 'array'] ,
+            'destinations.*' => ['integer', 'exists:destinations,id'] ,
+
         ];
     }
 }

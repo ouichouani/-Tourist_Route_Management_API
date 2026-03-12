@@ -8,59 +8,48 @@ use App\Models\places;
 
 class PlacesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => places::all(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreplacesRequest $request)
     {
-        //
+        $places = places::create($request->validated());
+
+        return response()->json([
+            'data' => $places,
+            'message' => 'place created with success'
+
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(places $places)
     {
-        //
+        return response()->json([
+            'data' => $places,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(places $places)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateplacesRequest $request, places $places)
     {
-        //
+        $places->update($request->validated());
+
+        return response()->json([
+            'data' => $places->fresh(),
+            'message' => 'place updated with success'
+
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(places $places)
     {
-        //
+        $places->delete();
+
+        return response()->json([
+            'message' => 'place deleted with success'
+        ], 200);
     }
 }

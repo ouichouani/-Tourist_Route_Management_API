@@ -20,19 +20,27 @@ class distination extends Model
 
     public function activities(): BelongsToMany
     {
-        return $this->belongsToMany(activities::class, 'destination_activity')
+        return $this->belongsToMany(activities::class, 'destination_activity' , 'destination_id' , 'activity_id')
             ->withTimestamps();
     }
 
     public function places(): BelongsToMany
     {
-        return $this->belongsToMany(places::class, 'destination_place')
+        return $this->belongsToMany(places::class, 'destination_place' , 'destination_id' , 'place_id')
             ->withTimestamps();
     }
 
     public function dishes(): BelongsToMany
     {
-        return $this->belongsToMany(dishes::class, 'destination_dish')
+        return $this->belongsToMany(dishes::class, 'destination_dish' ,'destination_id' , 'dish_id')
             ->withTimestamps();
     }
+
+    public function itineraries(): BelongsToMany
+    {
+        return $this->belongsToMany(itinerarie::class, 'itinerarie_destination', 'destination_id', 'itinerarie_id')
+            ->withTimestamps();
+    }
+
 }
+

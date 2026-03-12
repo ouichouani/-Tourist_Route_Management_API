@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->timestamp('duration_from') ;
             $table->timestamp('duration_to') ;
-            $table->string('image');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('set null') ;
+            $table->string('image')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
         });
     }
 
@@ -30,3 +31,4 @@ return new class extends Migration
         Schema::dropIfExists('itineraries');
     }
 };
+

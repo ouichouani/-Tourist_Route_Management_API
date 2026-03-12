@@ -8,59 +8,49 @@ use App\Models\dishes;
 
 class DishesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => dishes::all(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoredishesRequest $request)
     {
-        //
+        $dishes = dishes::create($request->validated());
+
+        return response()->json([
+            'data' => $dishes,
+            'message' => 'dish created with success'
+
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(dishes $dishes)
     {
-        //
+        return response()->json([
+            'data' => $dishes,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(dishes $dishes)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatedishesRequest $request, dishes $dishes)
     {
-        //
+        $dishes->update($request->validated());
+
+        return response()->json([
+            'data' => $dishes->fresh(),
+            'message' => 'dish updated with success'
+
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(dishes $dishes)
     {
-        //
+        $dishes->delete();
+
+        return response()->json([
+            'message' => 'dish deleted with success'
+
+        ], 200);
     }
 }

@@ -16,6 +16,10 @@ class dishes extends Model
         'price',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ] ;
+
     public function destinations(): BelongsToMany
     {
         return $this->belongsToMany(distination::class, 'destination_dish')

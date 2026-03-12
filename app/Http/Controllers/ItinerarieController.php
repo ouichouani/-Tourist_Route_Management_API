@@ -5,62 +5,88 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreitinerarieRequest;
 use App\Http\Requests\UpdateitinerarieRequest;
 use App\Models\itinerarie;
+use Illuminate\Http\Request;
 
 class ItinerarieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => itinerarie::all(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function filter(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'duration_from' => ['nullable', 'date'],
+            'duration_to' => ['nullable', 'date', 'after_or_equal:duration_from'],
+        ]);
+
+        $query = itinerarie::query();
+
+        if (!empty($validated['category_id'])) {
+            $query->where('category_id', $validated['category_id']);
+        }
+
+        if (!empty($validated['duration_from'])) {
+            $query->where('duration_from', '>=', $validated['duration_from']);
+        }
+
+        if (!empty($validated['duration_to'])) {
+            $query->where('duration_to', '<=', $validated['duration_to']);
+        }
+
+        return response()->json([
+            'data' => $query->get(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreitinerarieRequest $request)
     {
-        //
+        $itinerarie = itinerarie::create($request->safe()->except('destinations'));
+        $itinerarie->destinations()->attach($request->destinations) ;
+
+
+        return response()->json([
+            'data' => $itinerarie->load('destinations'),
+            'message' => 'itinerarie created with success'
+
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(itinerarie $itinerarie)
     {
-        //
+        return response()->json([
+            'data' => $itinerarie,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(itinerarie $itinerarie)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateitinerarieRequest $request, itinerarie $itinerarie)
     {
-        //
+        $itinerarie->update($request->validated());
+
+        return response()->json([
+            'data' => $itinerarie->fresh(),
+            'message' => 'itinerarie updated with success'
+
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(itinerarie $itinerarie)
     {
-        //
+        $itinerarie->delete();
+
+        return response()->json([
+            'message' => 'itinerarie deleted with success'
+        ], 200);
     }
 }
+
+
+
+
+
+
+

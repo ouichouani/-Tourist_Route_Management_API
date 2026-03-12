@@ -16,6 +16,10 @@ class places extends Model
         'description',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     public function destinations(): BelongsToMany
     {
         return $this->belongsToMany(distination::class, 'destination_place')

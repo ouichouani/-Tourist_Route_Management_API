@@ -8,59 +8,47 @@ use App\Models\activities;
 
 class ActivitiesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => activities::all(),
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreactivitiesRequest $request)
     {
-        //
+        $activities = activities::create($request->validated());
+
+        return response()->json([
+            'data' => $activities,
+            'message' => 'activity created with success'
+
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(activities $activities)
+    public function show(activities $activity)
     {
-        //
+        return response()->json([
+            'data' => $activity,
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(activities $activities)
+    public function update(UpdateactivitiesRequest $request, activities $activity)
     {
-        //
+        $activity->update($request->validated());
+        return response()->json([
+            'data' => $activity->fresh(),
+            'message' => 'activity updated with success'
+
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateactivitiesRequest $request, activities $activities)
+    public function destroy(activities $activity)
     {
-        //
-    }
+        $activity->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(activities $activities)
-    {
-        //
+        return response()->json([
+            'message' => 'activity deleted with success'
+        ], 200);
     }
 }
