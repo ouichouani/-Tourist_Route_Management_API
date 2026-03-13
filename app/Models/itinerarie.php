@@ -42,5 +42,10 @@ class itinerarie extends Model
             ->withTimestamps();
     }
 
-}
+    public function toVisitLists(): BelongsToMany
+    {
+        return $this->belongsToMany(ToVisitList::class, 'itinerary_to_visit_list', 'itinerary_id', 'to_visit_list_id')
+            ->withTimestamps();
+    }
 
+}

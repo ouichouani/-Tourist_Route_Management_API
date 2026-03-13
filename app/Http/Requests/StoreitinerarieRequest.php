@@ -19,7 +19,9 @@ class StoreitinerarieRequest extends FormRequest
             
             'duration_to' => ['required', 'date', 'after_or_equal:duration_from'],
             'image' => ['nullable', 'string', 'max:255'],
+
             'category_id' => ['nullable', 'exists:categories,id'],    
+            'user_id' => ['nullable', 'exists:users,id'],    
 
             'destinations' => ['required' , 'array'] ,
             'destinations.*' => ['integer', 'exists:destinations,id'] ,

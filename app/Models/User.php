@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function itineraries(): HasMany
     {
         return $this->hasMany(itinerarie::class, 'user_id');
+    }
+
+    public function toVisitList(): HasOne
+    {
+        return $this->hasOne(ToVisitList::class, 'user_id');
     }
 }

@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoredistinationRequest;
 use App\Http\Requests\UpdatedistinationRequest;
 use App\Models\distination;
+use OpenApi\Attributes as OA;
 
 class DistinationController extends Controller
 {
+    #[OA\Get(
+        path: '/api/distinations',
+        summary: 'List distinations',
+        tags: ['Distination'],
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+        ]
+    )]
     public function index()
     {
         $distinations = distination::with(['dishes' , "places" , "activities"])->get() ;
@@ -16,6 +25,40 @@ class DistinationController extends Controller
         ]);
     }
 
+    #[OA\Post(
+        path: '/api/distinations',
+        summary: 'Create distination',
+        tags: ['Distination'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'accommodation', 'dishes', 'places', 'activities'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', maxLength: 255),
+                    new OA\Property(property: 'accommodation', type: 'string', maxLength: 255),
+                    new OA\Property(
+                        property: 'dishes',
+                        type: 'array',
+                        items: new OA\Items(type: 'integer')
+                    ),
+                    new OA\Property(
+                        property: 'places',
+                        type: 'array',
+                        items: new OA\Items(type: 'integer')
+                    ),
+                    new OA\Property(
+                        property: 'activities',
+                        type: 'array',
+                        items: new OA\Items(type: 'integer')
+                    ),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Created'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function store(StoredistinationRequest $request)
     {
         $distination = distination::create($request->safe()->except(['dishes' , 'places' , 'activities']));
@@ -31,6 +74,23 @@ class DistinationController extends Controller
         ], 201);
     }
 
+    #[OA\Get(
+        path: '/api/distinations/{distination}',
+        summary: 'Show distination',
+        tags: ['Distination'],
+        parameters: [
+            new OA\Parameter(
+                name: 'distination',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+            new OA\Response(response: 404, description: 'Not Found'),
+        ]
+    )]
     public function show(distination $distination)
     {
         return response()->json([
@@ -38,6 +98,33 @@ class DistinationController extends Controller
         ]);
     }
 
+    #[OA\Put(
+        path: '/api/distinations/{distination}',
+        summary: 'Update distination',
+        tags: ['Distination'],
+        parameters: [
+            new OA\Parameter(
+                name: 'distination',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', maxLength: 255),
+                    new OA\Property(property: 'accommodation', type: 'string', maxLength: 255),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+            new OA\Response(response: 404, description: 'Not Found'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function update(UpdatedistinationRequest $request, distination $distination)
     {
         $distination->update($request->safe()->except(['places' , 'activities' , 'dishes']));
@@ -53,6 +140,23 @@ class DistinationController extends Controller
         ]);
     }
 
+    #[OA\Delete(
+        path: '/api/distinations/{distination}',
+        summary: 'Delete distination',
+        tags: ['Distination'],
+        parameters: [
+            new OA\Parameter(
+                name: 'distination',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+            new OA\Response(response: 404, description: 'Not Found'),
+        ]
+    )]
     public function destroy(distination $distination)
     {
         $distination->delete();

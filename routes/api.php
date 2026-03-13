@@ -6,6 +6,7 @@ use App\Http\Controllers\DishesController;
 use App\Http\Controllers\DistinationController;
 use App\Http\Controllers\ItinerarieController;
 use App\Http\Controllers\PlacesController;
+use App\Http\Controllers\ToVisitListController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TestController; //
 use Illuminate\Http\Request;
@@ -21,11 +22,12 @@ Route::post('/login', [UserController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/me', [UserController::class, 'show']);
-    
-    
-        
 
-
+    Route::get('/to-visit-list', [ToVisitListController::class, 'show']);
+    Route::post('/to-visit-list', [ToVisitListController::class, 'store']);
+    Route::delete('/to-visit-list', [ToVisitListController::class, 'delete']);
+    Route::post('/to-visit-list/itineraries', [ToVisitListController::class, 'addItinerary']);
+    Route::delete('/to-visit-list/itineraries', [ToVisitListController::class, 'removeItinerary']);
     
     Route::get('itineraries/filter', [ItinerarieController::class, 'filter']);
 
@@ -36,6 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('dishes', DishesController::class)->missing(function (){return response()->json(['message' => "category not found"] , 404) ;}) ;
     Route::apiResource('activities', ActivitiesController::class)->missing(function (){return response()->json(['message' => "category not found"] , 404) ;}) ;
 });
-
 
 
